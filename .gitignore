@@ -1,0 +1,136 @@
+# ---- Python ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.sqlite3
+*.db
+
+# ---- Environment & Config ----
+.env
+*.env
+venv/
+env/
+.venv/
+.ipynb_checkpoints/
+
+# ---- Model Files ----
+*.pth
+*.pt
+*.h5
+*.pkl
+*.joblib
+
+# ---- Datasets ----
+Apple-Dataset/
+Cherry-Berry-Blue-Berry-Dataset/
+Corn-Dataset/
+Graps-Dataet/
+Peach-pepper-Dataset/
+Potato-Dataset/
+Soybean-Dataset/
+Tomato-Dataset/
+Whole-Dataset/
+
+# ---- Uploads & Generated Files ----
+uploads/
+static/uploads/
+chat_history/
+*.png
+*.jpg
+*.jpeg
+
+# ---- IDE / OS files ----
+.idea/
+.DS_Store
+Thumbs.db
+
+# ---- Virtual Environments ----
+*.egg-info/
+*.egg/
+build/
+dist/
+
+
+# --- Python cache ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Environment & Config ---
+.env
+venv/
+.venv/
+env/
+*.log
+
+# --- Model & Dataset files (don’t upload large data) ---
+*.pth
+*.pt
+*.pkl
+*.h5
+*.joblib
+*.csv
+*.xlsx
+
+# --- Folders to ignore ---
+../Apple-Dataset/
+../Corn-Dataset/
+../Graps-Dataet/
+../Peach-pepper-Dataset/
+../Potato-Dataset/
+../Soybean-Dataset/
+../Tomato-Dataset/
+../Whole-Dataset/
+../plant_disease_cnn.pth
+../uploads/
+
+# --- OS / IDE junk ---
+.DS_Store
+Thumbs.db
+.idea/
+
+
+# --- Python cache ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Environment & Config ---
+.env
+venv/
+.venv/
+env/
+*.log
+
+# --- Model & Dataset files (don’t upload large data) ---
+*.pth
+*.pt
+*.pkl
+*.h5
+*.joblib
+*.csv
+*.xlsx
+
+# --- Folders to ignore ---
+models/
+uploads/
+
+# --- OS / IDE junk ---
+.DS_Store
+Thumbs.db
+.idea/
+
+
+*.pth
+models/
+uploads/
+datasets/
+.env
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore

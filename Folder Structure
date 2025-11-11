@@ -1,0 +1,25 @@
+plant_disease_flask/
+│
+├─ app.py
+├─ models.py
+├─ utils.py
+├─ requirements.txt
+│-- classes.py
+├─ templates/
+│   └─ index.html
+│
+├─ static/
+│   ├─ css/
+│   │   └─ style.css
+│   └─ uploads/
+│
+└─ models/
+    ├─ plant_disease_cnn.pth
+    ├─ plant_disease_Apple.pth
+    ├─ plant_disease_Berry.pth
+    ├─ plant_disease_Corn.pth
+    ├─ plant_disease_Graps.pth
+    ├─ plant_disease_Peach.pth
+    ├─ plant_disease_Potato.pth
+    ├─ plant_disease_Soybean.pth
+    └─ plant_disease_Tomato.pth

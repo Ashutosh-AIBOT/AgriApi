@@ -1,0 +1,387 @@
+
+Here’s the breakdown:
+
+---
+
+### 🍎 Apple-Dataset
+
+```python
+apple_classes = [
+    'Apple___Apple_scab',
+    'Apple___Black_rot',
+    'Apple___Cedar_apple_rust',
+    'Apple___healthy'
+]
+```
+
+---
+
+### 🫐🍒 Cherry-Berry-Blue-Berry-Dataset
+
+```python
+cherry_berry_blueberry_classes = [
+    'Blueberry___healthy',
+    'Cherry_(including_sour)___Powdery_mildew',
+    'Cherry_(including_sour)___healthy',
+    'Raspberry___healthy',
+    'Strawberry___Leaf_scorch',
+    'Strawberry___healthy'
+]
+```
+
+---
+
+### 🌽 Corn-Dataset
+
+```python
+corn_classes = [
+    'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot',
+    'Corn_(maize)___Common_rust_',
+    'Corn_(maize)___Northern_Leaf_Blight',
+    'Corn_(maize)___healthy'
+]
+```
+
+---
+
+### 🍇 Grape-Dataset
+
+```python
+grape_classes = [
+    'Grape___Black_rot',
+    'Grape___Esca_(Black_Measles)',
+    'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)',
+    'Grape___healthy'
+]
+```
+
+---
+
+### 🍊🍑🌶 Peach-pepper-Dataset
+
+```python
+peach_pepper_classes = [
+    'Orange___Haunglongbing_(Citrus_greening)',
+    'Peach___Bacterial_spot',
+    'Peach___healthy',
+    'Pepper,_bell___Bacterial_spot',
+    'Pepper,_bell___healthy'
+]
+```
+
+---
+
+### 🥔 Potato-Dataset
+
+```python
+potato_classes = [
+    'Potato___Early_blight',
+    'Potato___Late_blight',
+    'Potato___healthy'
+]
+```
+
+---
+
+### 🌱 Soybean-Dataset
+
+```python
+soybean_classes = [
+    'Soybean___healthy',
+    'Squash___Powdery_mildew'
+]
+```
+
+---
+
+### 🍅 Tomato-Dataset
+
+```python
+tomato_classes = [
+    'Tomato___Bacterial_spot',
+    'Tomato___Early_blight',
+    'Tomato___Late_blight',
+    'Tomato___Leaf_Mold',
+    'Tomato___Septoria_leaf_spot',
+    'Tomato___Spider_mites Two-spotted_spider_mite',
+    'Tomato___Target_Spot',
+    'Tomato___Tomato_Yellow_Leaf_Curl_Virus',
+    'Tomato___Tomato_mosaic_virus',
+    'Tomato___healthy'
+]
+```
+
+---
+
+
+
+# import os
+# import pandas as pd
+# from flask import Flask, render_template, request, flash, send_from_directory
+# from datetime import datetime
+# from PIL import UnidentifiedImageError
+
+# from utils import load_model, get_prediction
+# from classes import dataset_classes, model_map
+
+# # Flask Config
+# app = Flask(__name__)
+# app.secret_key = "secret123"
+# UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
+# RESULTS_FILE = os.path.join(app.root_path, "results.csv")
+# app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+# os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# # ----------------------------
+# # Main Route
+# # ----------------------------
+# @app.route("/", methods=["GET", "POST"])
+# def index():
+#     prediction = None
+#     filename = None
+#     model_choice = None
+
+#     if request.method == "POST":
+#         file = request.files.get("file")
+#         model_choice = request.form.get("model_choice")
+
+#         if not file or file.filename == "":
+#             flash("Please upload a file!")
+#         elif not model_choice:
+#             flash("Please select a model!")
+#         else:
+#             try:
+#                 filename = file.filename
+#                 filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+#                 file.save(filepath)
+
+#                 # Run prediction
+#                 classes = dataset_classes[model_choice]
+#                 model_path = model_map[model_choice]
+
+#                 if not os.path.exists(model_path):
+#                     flash(f"Model file `{model_path}` not found!")
+#                 else:
+#                     model = load_model(model_path, len(classes))
+#                     with open(filepath, "rb") as f:
+#                         image_bytes = f.read()
+#                     prediction = get_prediction(model, image_bytes, classes)
+
+#                     # Save prediction to CSV
+#                     new_row = pd.DataFrame([{
+#                         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+#                         "filename": filename,
+#                         "model": model_choice,
+#                         "prediction": prediction
+#                     }])
+#                     if os.path.exists(RESULTS_FILE):
+#                         try:
+#                             df = pd.read_csv(RESULTS_FILE)
+#                             df = pd.concat([df, new_row], ignore_index=True)
+#                         except Exception:
+#                             df = new_row
+#                     else:
+#                         df = new_row
+#                     df.to_csv(RESULTS_FILE, index=False)
+
+#             except UnidentifiedImageError:
+#                 flash("Invalid image file!")
+#             except Exception as e:
+#                 flash(f"Prediction error: {e}")
+
+#     return render_template(
+#         "index.html",
+#         models=list(dataset_classes.keys()),
+#         prediction=prediction,
+#         filename=filename,
+#         model_choice=model_choice
+#     )
+
+
+# # ----------------------------
+# # Serve uploaded files
+# # ----------------------------
+# @app.route("/uploads/<filename>")
+# def uploaded_file(filename):
+#     return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+
+
+# # ----------------------------
+# # Prediction history
+# # ----------------------------
+# @app.route("/history")
+# def history():
+#     if os.path.exists(RESULTS_FILE):
+#         df = pd.read_csv(RESULTS_FILE)
+#         return render_template(
+#             "history.html",
+#             tables=[df.tail(10).to_html(classes="table table-striped", index=False)]
+#         )
+#     else:
+#         flash("No prediction history available.")
+#         return render_template("index.html", models=list(dataset_classes.keys()))
+
+
+# if __name__ == "__main__":
+#     app.run(debug=True)
+
+
+
+
+{% comment %} <!DOCTYPE html>
+<html>
+<head>
+    <title>Image Prediction</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        /* Dark ChatGPT-like background */
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #202123; /* dark theme background */
+            color: #e5e5e5;
+        }
+
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .card {
+            width: 100%;
+            height: 95vh;
+            padding: 3rem;
+            border-radius: 15px;
+            background-color: #2a2a37; /* dark card background */
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow-y: auto;
+        }
+
+        h2 {
+            color: #00ffcb; /* neon accent for title */
+            font-weight: 700;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        form .form-control, form .form-select {
+            width: 50%;
+            max-width: 400px;
+            border-radius: 10px;
+            background-color: #3a3a4a;
+            color: #fff;
+            border: 1px solid #555;
+        }
+
+        form .form-control::placeholder {
+            color: #aaa;
+        }
+
+        form .btn {
+            width: 30%;
+            max-width: 200px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .btn-success {
+            background-color: #00cec9;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background-color: #019994;
+        }
+
+        .btn-primary {
+            background-color: #0984e3;
+            border: none;
+            font-weight: 600;
+            width: 25%;
+            max-width: 150px;
+            margin-top: 1rem;
+        }
+
+        .btn-primary:hover {
+            background-color: #0565b4;
+        }
+
+        .uploaded-image {
+            max-width: 70%;
+            max-height: 50vh;
+            margin: 2rem auto 1rem auto;
+            display: block;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            object-fit: contain;
+        }
+
+        .prediction {
+            margin-top: 1rem;
+            background-color: #33394d;
+            color: #00ffcb;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .alert {
+            margin-top: 1rem;
+            background-color: #444759;
+            color: #ffdd59;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="center-container">
+    <div class="card">
+        <h2 class="mb-4">Image Prediction</h2>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-warning">
+            {% for msg in messages %}<p class="mb-0">{{ msg }}</p>{% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST" enctype="multipart/form-data">
+            <input class="form-control" type="file" name="file" accept="image/*" required>
+            <select class="form-select" name="model_choice" required>
+                <option value="" disabled selected>Select Model</option>
+                {% for model in models %}
+                    <option value="{{ model }}" {% if model_choice==model %}selected{% endif %}>{{ model }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-success mt-2">Predict</button>
+        </form>
+
+        {% if filename %}
+        <img src="{{ url_for('uploaded_file', filename=filename) }}" class="uploaded-image" alt="Uploaded Image">
+        {% if prediction %}
+        <div class="prediction"><strong>Prediction:</strong> {{ prediction }}</div>
+        {% endif %}
+        {% endif %}
+
+        <a href="{{ url_for('history') }}" class="btn btn-primary">View History</a>
+    </div>
+</div>
+
+</body>
+</html> {% endcomment %}
